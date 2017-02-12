@@ -4,6 +4,8 @@ Example _Dijkstra_ algorithm (shortest path problem) implementation written in S
 
 ## Usage
 
+![Example usage](https://raw.githubusercontent.com/michalzelinka/dijkstra-swift/master/example.png)
+
 ```swift
 import Foundation
 
