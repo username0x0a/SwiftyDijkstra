@@ -49,4 +49,4 @@ print(G.shortestPath(from: Brno, to: Kolin))
 
 ## License
 
-Dijkstra example is released under the MIT license. See LICENSE for details.
+Dijkstra example is released under the MIT license. See the LICENSE file for details.

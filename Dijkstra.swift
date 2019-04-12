@@ -1,7 +1,7 @@
 //
 //  Dijkstra.swift
 //
-//  Copyright (c) 2017 Michal Zelinka
+//  Copyright (c) 2017– Michal Zelinka
 //
 //  MIT License
 //
@@ -10,10 +10,10 @@ import Foundation
 
 public class Node : CustomStringConvertible {
 
-	public var ID : String
-	var pathCost: Int?
-	var parentNode: Node?
-	var outEdges = [Edge]()
+	public private(set) var ID : String
+	fileprivate var pathCost: Int?
+	fileprivate var parentNode: Node?
+	fileprivate var outEdges = [Edge]()
 
 
 	public init(_ ID: String) {
