@@ -1,5 +1,5 @@
 //
-//  Dijkstra.swift
+//  SwiftyDijkstra.swift
 //
 //  Copyright (c) 2017– Michal Zelinka
 //
@@ -8,12 +8,12 @@
 
 import Foundation
 
-public class Node : CustomStringConvertible {
+public class Node : CustomStringConvertible, Equatable {
 
 	public private(set) var ID : String
 	fileprivate var pathCost: Int?
-	fileprivate var parentNode: Node?
-	fileprivate var outEdges = [Edge]()
+	fileprivate weak var parentNode: Node?
+	internal var outEdges = [Edge]()
 
 
 	public init(_ ID: String) {
@@ -24,6 +24,10 @@ public class Node : CustomStringConvertible {
 		pathCost = nil
 		parentNode = nil
 		outEdges = []
+	}
+
+	public static func == (lhs: Node, rhs: Node) -> Bool {
+		lhs.ID == rhs.ID
 	}
 
 	public var description: String {
@@ -55,20 +59,24 @@ public class Edge : CustomStringConvertible {
 public class Graph {
 
 	public private(set) var edges: [Edge]
-
+	private let processingLock = NSLock()
 
 	public init(edges: [Edge]) {
 		self.edges = edges
+	}
+
+	private func resetElements() {
+		self.edges.forEach {
+			$0.from.reset()
+			$0.to.reset()
+		}
 	}
 
 	public func shortestPath(from: Node, to: Node) -> [Node] {
 
 		if (from === to) { return [ from ] }
 
-		for e in edges {
-			e.from.reset()
-			e.to.reset()
-		}
+		processingLock.lock()
 
 		for e in edges {
 
@@ -112,6 +120,9 @@ public class Graph {
 			path.insert(top!, at: 0)
 			top = top?.parentNode
 		}
+
+		self.resetElements()
+		processingLock.unlock()
 
 		if (path.count <= 1) { return [ ] }
 
