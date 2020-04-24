@@ -1,13 +1,14 @@
-# Dijkstra Swift
+# SwiftyDijkstra
 
 Example _Dijkstra_ algorithm (shortest path problem) implementation written in Swift.
 
 ## Usage
 
-![Example usage](https://raw.githubusercontent.com/michalzelinka/dijkstra-swift/master/example.png)
+![Example usage](https://raw.githubusercontent.com/username0x0a/SwiftyDijkstra/master/example.png)
 
 ```swift
 import Foundation
+import SwiftyDijkstra
 
 // Define the nodes
 
