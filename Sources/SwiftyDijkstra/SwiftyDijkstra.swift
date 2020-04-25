@@ -51,6 +51,10 @@ public class Edge : CustomStringConvertible {
 		self.bidirectional = bidirectional
 	}
 
+	fileprivate var reversedEdge: Edge { get {
+		Edge(from: to, to: from, cost: cost, bidirectional: bidirectional)
+	} }
+
 	public var description: String {
 		return "\(from.ID) -> \(to.ID)"
 	}
@@ -58,7 +62,7 @@ public class Edge : CustomStringConvertible {
 
 public class Graph {
 
-	public private(set) var edges: [Edge]
+	private var edges: [Edge]
 	private let processingLock = NSLock()
 
 	public init(edges: [Edge]) {
@@ -79,12 +83,9 @@ public class Graph {
 		processingLock.lock()
 
 		for e in edges {
-
 			e.from.outEdges.append(e)
-
-			if (e.bidirectional == true) {
-				e.to.outEdges.append(Edge(from: e.to, to: e.from,
-					cost: e.cost, bidirectional: e.bidirectional))
+			if (e.bidirectional) {
+				e.to.outEdges.append(e.reversedEdge)
 			}
 		}
 
@@ -102,15 +103,16 @@ public class Graph {
 
 				if (current.ID == dest.ID) { continue }
 
-				if dest.pathCost != nil &&
-				   dest.pathCost! <= (current.pathCost ?? 0) + e.cost
+				let currCost = current.pathCost ?? 0
+
+				if let destCost = dest.pathCost,
+				   destCost <= currCost + e.cost
 				{ continue }
 
-				dest.pathCost = (current.pathCost ?? 0) + e.cost
+				dest.pathCost = currCost + e.cost
 				dest.parentNode = current
 				queue.append(dest)
 			}
-
 		}
 
 		var top : Node? = to
@@ -118,7 +120,7 @@ public class Graph {
 
 		while (top != nil) {
 			path.insert(top!, at: 0)
-			top = top?.parentNode
+			top = top!.parentNode
 		}
 
 		self.resetElements()
